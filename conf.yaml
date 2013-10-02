@@ -1,0 +1,10 @@
+switches:
+    - name: Lampe 1
+      type: command
+      family: lamps
+      commands:
+        on: "../rcswitch-bbb 10011 1 1"
+        off: "../rcswitch-bbb 10011 1 0"
+plugins:
+    onewire:
+        mode: scan
