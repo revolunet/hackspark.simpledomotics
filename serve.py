@@ -6,6 +6,11 @@ from bottle import static_file
 @view('hello')
 def hello(name='World'):
     return dict(name=name)
+    
+@route('/')
+@view('main')
+def index():
+    return dict()
 
 @route('/static/:filename#.*#')
 def send_static(filename):

@@ -1,3 +1,7 @@
+cameras:
+    - name: Main Room
+      url: http://xxx:8080/snapshot.cgi?user=admin&pwd=
+    
 switches:
     - name: Lampe 1
       type: command
@@ -5,6 +9,7 @@ switches:
       commands:
         on: "../rcswitch-bbb 10011 1 1"
         off: "../rcswitch-bbb 10011 1 0"
+        
 plugins:
     onewire:
         mode: scan
