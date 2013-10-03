@@ -1,3 +1,5 @@
+from HackSpark.SimpleDomotics import app
+
 class AuthMiddleware(object):
 
     def __init__(self, wrap_app):

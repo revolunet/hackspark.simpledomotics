@@ -1,7 +1,8 @@
-from bottle import route, run, view, default_app, redirect, auth_basic
-from bottle import static_file
+from bottle import run
 import yaml
-    
+
+from HackSpark.SimpleDomotics import app
+from HackSpark.SimpleDomotics.controllers.auth import AuthMiddleware
 
 if __name__ == "__main__":
     with open('conf.yaml') as fp:

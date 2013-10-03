@@ -1,3 +1,6 @@
+from bottle import view, redirect, static_file
+from HackSpark.SimpleDomotics import app
+
 @app.route('/')
 @view('main')
 def index():

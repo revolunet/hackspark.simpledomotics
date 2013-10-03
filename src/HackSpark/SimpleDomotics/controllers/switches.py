@@ -1,6 +1,7 @@
-from simpledomotics
-
 from os import system as call
+from bottle import view, redirect
+
+from HackSpark.SimpleDomotics import app
 
 @app.route('/switch/<switch_num>/<action>')
 @app.route('/switch/<switch_num>')
