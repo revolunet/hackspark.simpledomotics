@@ -30,9 +30,9 @@
 %if switches is not None:
     <div class="col-md-3">
         <h4 class="text-muted">Switches</h2>
-        <div class="row switches">
-        %for num, switch in enumerate(switches):
+        <div class="switches">
             <ul class="list-group">
+        %for num, switch in enumerate(switches):
                 <li class="list-group-item">
                     <div class="btn-group pull-right">
                         <a href="/switch/{{num}}/on" class="btn {{switch.get('state', 0) and "btn-primary" or ""}}">On</a>
@@ -40,9 +40,24 @@
                     </div>
                     <h5>{{ switch["name"] }}</h5>
                 </li>
-            </ul>
         %end
+            </ul>
         </div>
+    </div>
+%end
+%for pg_info in plugin_infos:
+    <div class="col-md-3">
+        <h4 class="text-muted">{{pg_info["title"]}}</h2>
+        <ul class="list-group">
+        %for num, item in enumerate(pg_info["items"]):
+            <li class="list-group-item">
+                <p class="btn-group pull-right">
+                    {{ item["value"] }}
+                </p>
+                {{ item["name"] }}
+            </li>
+        %end
+        </ul>
     </div>
 %end
 </div>
