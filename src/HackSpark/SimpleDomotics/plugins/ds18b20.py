@@ -1,4 +1,9 @@
 
+
+def initialize(config):
+    return
+
+
 def get_value(plugin_conf, chip_id=None, name=None):
     w1  ="/sys/bus/w1/devices/%s/w1_slave" % chip_id
     if name is None:

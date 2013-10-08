@@ -12,4 +12,8 @@ switches:
         
 plugins:
     onewire:
-        mode: scan
+    rcswitch:
+        gpios:
+            transmit: 60
+            receive: 30
+        

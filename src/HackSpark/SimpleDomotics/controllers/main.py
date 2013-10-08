@@ -1,6 +1,7 @@
 from bottle import view, redirect, static_file
 import pkg_resources
 from HackSpark.SimpleDomotics import app
+from HackSpark.SimpleDomotics.plugins_manager import PLUGIN_MODULES
 
 from importlib import import_module
 

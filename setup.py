@@ -6,7 +6,7 @@ try:
 except ImportError:
     pass
 
-version = '0.4'
+version = '0.1'
 
 long_description = (
     open('README.txt').read()
@@ -40,6 +40,10 @@ setup(name='HackSpark.SimpleDomotics',
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'bottle',
+          'pyyaml',
+          'paste',
+          'cython'
       ],
       entry_points="""
       # -*- Entry points: -*-
