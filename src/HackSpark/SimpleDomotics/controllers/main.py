@@ -1,7 +1,7 @@
 from bottle import view, redirect, static_file
 import pkg_resources
 from HackSpark.SimpleDomotics import app
-from HackSpark.SimpleDomotics.plugins_manager import PLUGIN_MODULES
+from HackSpark.SimpleDomotics.plugin_manager import PLUGINS
 
 from importlib import import_module
 
@@ -15,8 +15,7 @@ def index():
         pg = dict(name=plugin_name,
                   title=info.get('title', plugin_name.capitalize()),
                   items=list())
-        print repr(pg_mod)
-        print dir(pg_mod)
+                  
         if "sensors" in info:          
             for item in info["sensors"]:
                 pg["items"].append(pg_mod.get_value(plugin_conf=info, **item))

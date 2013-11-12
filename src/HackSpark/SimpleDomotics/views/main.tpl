@@ -46,6 +46,7 @@
     </div>
 %end
 %for pg_info in plugin_infos:
+  %if pg_info["items"]:
     <div class="col-md-3">
         <h4 class="text-muted">{{pg_info["title"]}}</h2>
         <ul class="list-group">
@@ -59,6 +60,7 @@
         %end
         </ul>
     </div>
+  %end
 %end
 </div>
 %rebase base title=('Manage')

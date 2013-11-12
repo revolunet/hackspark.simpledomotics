@@ -2,6 +2,9 @@
 
 def initialize(config):
     return
+    
+def receive():
+    pass
 
 
 def get_value(plugin_conf, chip_id=None, name=None):
