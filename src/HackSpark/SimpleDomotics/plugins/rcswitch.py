@@ -1,12 +1,22 @@
 from ctypes import cdll
 import threading
+from pyjon.events import EventDispatcher
 
 LIB = None
+
+class Manager(object):
+    __metaclass__ = EventDispatcher
+
+MANAGER = Manager()
+
+emit_event = MANAGER.emit_event
+add_listener = MANAGER.add_listener
 
 def receive():
     val = LIB.get_received_value()
     if val != -1:
-        print val
+        emit_event("received_value", value=val)
+        emit_event(val)
 
 def initialize(config):
     global LIB
@@ -21,6 +31,7 @@ def initialize(config):
         transmit_gpio = config["gpios"].get("transmit")
     
     LIB.initialize_rcswitch()
+    #LIB.set_realtime_priority()
     
     if receive_gpio is not None:
         LIB.init_receiver(receive_gpio)

@@ -16,7 +16,7 @@ def index():
                   title=info.get('title', plugin_name.capitalize()),
                   items=list())
                   
-        if "sensors" in info:          
+        if "sensors" in info:
             for item in info["sensors"]:
                 pg["items"].append(pg_mod.get_value(plugin_conf=info, **item))
         

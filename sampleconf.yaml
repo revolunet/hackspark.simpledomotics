@@ -1,3 +1,6 @@
+users:
+     admin: testpass
+
 cameras:
     - name: Main Room
       url: http://xxx:8080/snapshot.cgi?user=admin&pwd=
@@ -7,8 +10,8 @@ switches:
       type: command
       family: lamps
       commands:
-        on: "../rcswitch-bbb 10011 1 1"
-        off: "../rcswitch-bbb 10011 1 0"
+        on: "../rcswitch-bbb/send 10011 1 1"
+        off: "../rcswitch-bbb/send 10011 1 0"
         
 plugins:
     onewire:
@@ -16,4 +19,21 @@ plugins:
         gpios:
             transmit: 60
             receive: 30
+        events:
+            received_value:
+                - print "received %s" % value
+    security:
+        events:
+            arm:
+                - print "arming"
+            disarm:
+                - print "disarming"
+            alert_started:
+                - print "ALERT !"
+            alert_finished:
+                - print "back to normal."
+            suspicious_started:
+                - print "Something is happening"
+            suspicious_end:
+                - print "Ok, end of suspicious mode."
         

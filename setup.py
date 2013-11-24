@@ -43,7 +43,8 @@ setup(name='HackSpark.SimpleDomotics',
           'bottle',
           'pyyaml',
           'paste',
-          'cython'
+          'pyjon.events',
+          'pyjon.utils'
       ],
       entry_points="""
       # -*- Entry points: -*-
