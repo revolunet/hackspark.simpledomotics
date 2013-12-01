@@ -1,11 +1,21 @@
 from ctypes import cdll
 import threading
 from pyjon.events import EventDispatcher
+from pyjon.utils import create_function
 
 LIB = None
 
 class Manager(object):
     __metaclass__ = EventDispatcher
+
+    def configure(self, config):
+        self._items = config.get("items", dict())
+
+    def received_value(self, value):
+        emit_event("received_value", value=value)
+        emit_event(value)
+        if value in self._items:
+            emit_event(self._items[value])
 
 MANAGER = Manager()
 
@@ -15,8 +25,7 @@ add_listener = MANAGER.add_listener
 def receive():
     val = LIB.get_received_value()
     if val != -1:
-        emit_event("received_value", value=val)
-        emit_event(val)
+        MANAGER.received_value(val)
 
 def initialize(config):
     global LIB
@@ -38,6 +47,10 @@ def initialize(config):
     
     if transmit_gpio is not None:
         LIB.init_transmitter(transmit_gpio)
+
+    MANAGER.configure(config)
+
+    
         
 def switch(switch_config, action="on"):
     if action == "on":

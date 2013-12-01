@@ -45,10 +45,8 @@ class GPIO(object):
         """
         Sets the gpio pin high.
         """
-        print self._direction
         if self._direction == 'out':
             self._value = 1
-            print self._file
             self._file.write('1')
             self._file.flush()
             self._status = True
@@ -57,7 +55,6 @@ class GPIO(object):
         """
         Sets the gpio pin low.
         """
-        print self._direction
         if self._direction == 'out':
             self._value = 0
             self._file.write('0')
@@ -146,7 +143,6 @@ def get_value(switch_config):
     return GPIOS[int(switch_config["pin"])].value()
 
 def switch(switch_config, action="on"):
-    print int(switch_config["pin"])
     if action == "on":
         action = 1
         GPIOS[int(switch_config["pin"])].on()

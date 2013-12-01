@@ -46,7 +46,6 @@ def initialize_plugins(config):
                 if isinstance(listeners, basestring):
                     listeners = [listeners]
                 for listener in listeners:
-                    print 'event "%s" => "%s"' % (event, listener)
                     pg_mod.add_listener(event, create_plugin_event_listener(listener, plugin_name))
     
     thread = Thread(target = input_round_robin)
