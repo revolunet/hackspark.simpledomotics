@@ -1,6 +1,6 @@
 from bottle import view, redirect, static_file
 import pkg_resources
-from HackSpark.SimpleDomotics import app
+from HackSpark.SimpleDomotics import app, plugin_manager
 from HackSpark.SimpleDomotics.plugin_manager import PLUGINS
 
 from importlib import import_module
@@ -21,8 +21,18 @@ def index():
                 pg["items"].append(pg_mod.get_value(plugin_conf=info, **item))
         
         plugin_infos.append(pg)
+    
+    switches = app.config.get("switches", None)
+    # let's update switch states
+    if switches is not None:
+        for switch_val in switches:
+            stype = switch_val.get("type")
+            if stype == 'plugin':
+                plugin = plugin_manager.get_plugin(switch_val["plugin"])
+                if hasattr(plugin, "get_value"):
+                    switch_val["state"] = plugin.get_value(switch_val)            
         
-    return dict(switches=app.config.get("switches", None),
+    return dict(switches=switches,
                 cameras=app.config.get("cameras", None),
                 plugin_infos=plugin_infos)
                 

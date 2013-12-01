@@ -46,23 +46,52 @@ class SecuritySystem(object):
         self.emit_event("alert_finished")
         
     def arm(self):
-        self._arm = True
+        self._armed = True
         self.emit_event("armed")
         
     def disarm(self):
-        self._arm = True
+        self._armed = False
         self.emit_event("disarmed")
         if self._alert:
             self.end_alert()
+            
+    def is_armed(self):
+        return self._armed
         
     
 add_listener = SecuritySystem().add_listener
 emit_event = SecuritySystem().emit_event
 arm = SecuritySystem().arm
 disarm = SecuritySystem().disarm
+is_armed = SecuritySystem().is_armed
+start_alert = SecuritySystem().start_alert
+end_alert = SecuritySystem().end_alert
 
 def initialize(config):
     return
+    
+def switch(switch_config, action="on"):
+    if action == "on":
+        action = 1
+    elif action == "off":
+        action = 0
+    
+    """t = threading.Thread(target=LIB.transmit_switch, args=(
+                            str(switch_config["system_code"]),
+                            int(switch_config["unit_code"]),
+                            int(action),))
+    t.start()"""
+    
+    if action:
+        arm()
+    else:
+        disarm()
+        
+    switch_config["state"] = int(action)
+
+def get_value(switch_config):
+    print is_armed()
+    return int(is_armed())
     
 def receive():
     """ This dunction is called very often, like a heartbeat.

@@ -40,7 +40,6 @@ def initialize(config):
         LIB.init_transmitter(transmit_gpio)
         
 def switch(switch_config, action="on"):
-            
     if action == "on":
         action = 1
     elif action == "off":
