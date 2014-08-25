@@ -27,14 +27,29 @@ def create_plugin_event_listener(code, plugin_name):
 
 def initialize_plugins(config):
     # warning, this is not thread safe for now.
-    for plugin_name, info in app.config.get("plugins", dict()).items():
+    plugin_dict = app.config.get("plugins")
+    if plugin_dict is None:
+        plugin_dict = dict()
+        
+    plugin_namespaces = ["HackSpark.SimpleDomotics.plugins",]
+    if app.config.get("server", dict()).get("plugin_namespaces") is not None:
+        plugin_namespaces.extend(
+            app.config["server"]["plugin_namespaces"])        
+        
+    for plugin_name, info in plugin_dict.items():
         #pg_mod = __import__("HackSpark.SimpleDomotics.plugins.%s" % plugin_name)
-        try:
-            pg_mod = import_module("HackSpark.SimpleDomotics.plugins.%s" % plugin_name)
-        except ImportError:
-            raise
-            #print "Can't import module %s, skipping." % plugin_name
-            #continue
+        pg_mod = None
+        
+        p_err = list()
+        for namespace in plugin_namespaces:
+            try:
+                pg_mod = import_module("%s.%s" % (namespace,plugin_name))
+            except ImportError, e:
+                p_err.append(e)
+        if pg_mod is None:
+            for err in p_err:
+                print repr(err)
+            raise ImportError("Can't import plugin %s." % plugin_name)
         
         pg_mod.initialize(info)
         PLUGINS[plugin_name] = pg_mod

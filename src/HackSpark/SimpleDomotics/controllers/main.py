@@ -9,7 +9,11 @@ from importlib import import_module
 @view('main')
 def index():
     plugin_infos = list()
-    for plugin_name, info in app.config.get("plugins", dict()).items():
+    plugin_dict = app.config.get("plugins")
+    if plugin_dict is None:
+        plugin_dict = dict()
+        
+    for plugin_name, info in plugin_dict.items():
         #pg_mod = __import__("HackSpark.SimpleDomotics.plugins.%s" % plugin_name)
         pg_mod = import_module("HackSpark.SimpleDomotics.plugins.%s" % plugin_name)
         pg = dict(name=plugin_name,
@@ -29,8 +33,9 @@ def index():
             stype = switch_val.get("type")
             if stype == 'plugin':
                 plugin = plugin_manager.get_plugin(switch_val["plugin"])
+                print plugin
                 if hasattr(plugin, "get_value"):
-                    switch_val["state"] = plugin.get_value(switch_val)            
+                    switch_val["state"] = plugin.get_value(switch_val)
         
     return dict(switches=switches,
                 cameras=app.config.get("cameras", None),

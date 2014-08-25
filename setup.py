@@ -48,5 +48,7 @@ setup(name='HackSpark.SimpleDomotics',
       ],
       entry_points="""
       # -*- Entry points: -*-
+      [console_scripts]
+      simpledomotics = HackSpark.SimpleDomotics.serve:serve_app
       """
       )

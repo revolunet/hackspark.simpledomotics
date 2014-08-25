@@ -137,6 +137,7 @@ GPIOS = dict()
 def initialize(config):
     if "pins" in config:
         for pin, direction in config["pins"].items():
+            print pin, direction
             GPIOS[pin] = GPIO(pin, direction=direction)
 
 def get_value(switch_config):
