@@ -1,7 +1,7 @@
 from bottle import view, redirect, static_file
 import pkg_resources
 from HackSpark.SimpleDomotics import app, plugin_manager
-from HackSpark.SimpleDomotics.plugin_manager import PLUGINS
+from HackSpark.SimpleDomotics.plugin_manager import PLUGINS_CONFIGS, get_plugin
 
 from importlib import import_module
 
@@ -9,13 +9,9 @@ from importlib import import_module
 @view('main')
 def index():
     plugin_infos = list()
-    plugin_dict = app.config.get("plugins")
-    if plugin_dict is None:
-        plugin_dict = dict()
         
-    for plugin_name, info in plugin_dict.items():
-        #pg_mod = __import__("HackSpark.SimpleDomotics.plugins.%s" % plugin_name)
-        pg_mod = import_module("HackSpark.SimpleDomotics.plugins.%s" % plugin_name)
+    for plugin_name, info in PLUGINS_CONFIGS.items():
+        pg_mod = get_plugin(plugin_name)
         pg = dict(name=plugin_name,
                   title=info.get('title', plugin_name.capitalize()),
                   items=list())
