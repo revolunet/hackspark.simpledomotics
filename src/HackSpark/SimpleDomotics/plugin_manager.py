@@ -4,6 +4,7 @@ from HackSpark.SimpleDomotics import app
 from importlib import import_module
 from threading import Thread
 import time
+import sys
 
 PLUGINS = dict()
 PLUGINS_CONFIGS = dict()
@@ -12,7 +13,10 @@ def input_round_robin():
     while True:
         for plugin in PLUGINS.values():
             if hasattr(plugin, "receive"):
-                plugin.receive()
+                try:
+                    plugin.receive()
+                except Exception, e:
+                    print "GOT AN EXCEPTION RUNNIN RECEIVE FOR %s" % (plugin_name)
         time.sleep(.0005) # fast enough sleep to avoid eating all cpu
 
 def create_plugin_event_listener(code, plugin_name):
@@ -30,6 +34,10 @@ def initialize_plugins(config):
     plugin_dict = app.config.get("plugins")
     if plugin_dict is None:
         plugin_dict = dict()
+        
+    if app.config.get("server", dict()).get("PYTHONPATH") is not None:
+        for path in app.config["server"]["PYTHONPATH"]:
+            sys.path.append(path)
         
     plugin_namespaces = ["HackSpark.SimpleDomotics.plugins",]
     if app.config.get("server", dict()).get("plugin_namespaces") is not None:
