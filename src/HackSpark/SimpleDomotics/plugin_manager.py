@@ -63,10 +63,10 @@ def create_plugin_event_listener(code, plugin_name):
 
 def initialize_plugins(config):
     # warning, this is not thread safe for now.
-	
-	prepare_configuration(config)
+    
+    prepare_configuration(config)
     prepare_functions(config)
-	
+    
     plugin_dict = app.config.get("plugins")
     if plugin_dict is None:
         plugin_dict = dict()
