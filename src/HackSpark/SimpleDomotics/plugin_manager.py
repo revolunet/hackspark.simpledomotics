@@ -5,9 +5,40 @@ from importlib import import_module
 from threading import Thread
 import time
 import sys
+import compiler
 
 PLUGINS = dict()
 PLUGINS_CONFIGS = dict()
+FUNCTIONS = dict()
+CONFIGURATION = dict()
+
+def prepare_configuration(config):
+    global CONFIGURATION
+    CONFIGURATION = config.get("configuration")
+    print CONFIGURATION
+
+def create_macro_launcher(function_name, code):
+    print CONFIGURATION
+    def execute_macro(*args, **kwargs):
+        print CONFIGURATION
+        evaldict = dict(PLUGINS=PLUGINS,
+                        configuration=CONFIGURATION,
+                        **FUNCTIONS)
+        exec code in evaldict
+        return evaldict[function_name](*args, **kwargs)
+    return execute_macro
+
+def prepare_functions(config):
+    functions = config.get("functions")
+    if functions is None:
+        return
+
+    for function_name, function_code in functions.items():
+        code = compile(function_code,
+                       '<macro function "%s">' % function_name, 'exec')
+        
+        FUNCTIONS[function_name] = create_macro_launcher(function_name, code)
+            
 
 def input_round_robin():
     while True:
@@ -22,7 +53,8 @@ def input_round_robin():
 def create_plugin_event_listener(code, plugin_name):
     def plugin_event(**kwargs):
         try:
-            kwargs.update(dict(PLUGINS=PLUGINS))
+            kwargs.update(dict(PLUGINS=PLUGINS,
+                               **FUNCTIONS))
             exec code in kwargs
         except Exception, e:
             print "GOT AN EXCEPTION RUNNING '%s'/'%s' EVENT:\n\t%s" % (plugin_name, code, e)
@@ -31,6 +63,10 @@ def create_plugin_event_listener(code, plugin_name):
 
 def initialize_plugins(config):
     # warning, this is not thread safe for now.
+	
+	prepare_configuration(config)
+    prepare_functions(config)
+	
     plugin_dict = app.config.get("plugins")
     if plugin_dict is None:
         plugin_dict = dict()
