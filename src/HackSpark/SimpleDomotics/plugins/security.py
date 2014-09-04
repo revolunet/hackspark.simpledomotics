@@ -38,6 +38,10 @@ class SecuritySystem(object):
         return self._values.get(key, value)
         
     def start_alert(self):
+        if (self._alert):
+            self.emit_event("alert_event")
+            return
+
         self._alert = True
         self.emit_event("alert_started")
         
