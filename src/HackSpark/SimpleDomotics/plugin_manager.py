@@ -47,7 +47,8 @@ def input_round_robin():
                 try:
                     plugin.receive()
                 except Exception, e:
-                    print "GOT AN EXCEPTION RUNNIN RECEIVE FOR %s" % (plugin_name)
+                    print "GOT AN EXCEPTION RUNNIN RECEIVE FOR %s" % (plugin.__name__)
+                    print e
         time.sleep(.0005) # fast enough sleep to avoid eating all cpu
 
 def create_plugin_event_listener(code, plugin_name):
