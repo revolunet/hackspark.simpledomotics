@@ -3,3 +3,4 @@ conf.yaml
 *.pyc
 *.pyo
 *~
+.git
