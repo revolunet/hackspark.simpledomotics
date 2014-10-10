@@ -15,12 +15,9 @@ CONFIGURATION = dict()
 def prepare_configuration(config):
     global CONFIGURATION
     CONFIGURATION = config.get("configuration")
-    print CONFIGURATION
 
 def create_macro_launcher(function_name, code):
-    print CONFIGURATION
     def execute_macro(*args, **kwargs):
-        print CONFIGURATION
         evaldict = dict(PLUGINS=PLUGINS,
                         configuration=CONFIGURATION,
                         **FUNCTIONS)
@@ -40,14 +37,13 @@ def prepare_functions(config):
         FUNCTIONS[function_name] = create_macro_launcher(function_name, code)
 
 def create_input_receiver(plugin):
-    def receiver():
+    if hasattr(plugin, "receive"):
         while True:
-            if hasattr(plugin, "receive"):
-                try:
-                    plugin.receive()
-                except Exception, e:
-                    print "GOT AN EXCEPTION RUNNIN RECEIVE FOR %s" % (plugin.__name__)
-                    print e
+            try:
+                plugin.receive()
+            except Exception, e:
+                print "GOT AN EXCEPTION RUNNIN RECEIVE FOR %s" % (plugin.__name__)
+                print e
             time.sleep(.0005)
     
 
@@ -108,6 +104,7 @@ def initialize_plugins(config):
             raise ImportError("Can't import plugin %s." % plugin_name)
         
         pg_mod.initialize(info)
+
         PLUGINS[plugin_name] = pg_mod
         PLUGINS_CONFIGS[plugin_name] = info
         
@@ -123,8 +120,6 @@ def initialize_plugins(config):
         thread = Thread(target = create_input_receiver(plugin))
         thread.start()
 
-    #thread = Thread(target = input_round_robin)
-    #thread.start()
-    
+
 def get_plugin(pname):
     return PLUGINS.get(pname)

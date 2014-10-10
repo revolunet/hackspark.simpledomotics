@@ -98,7 +98,6 @@ class GPIO(object):
         writes the given value to a sysfs
         path
         """
-        print repr(path), repr(value)
         with open(path, 'w') as buf:
             buf.write(value)
 
@@ -137,7 +136,6 @@ GPIOS = dict()
 def initialize(config):
     if "pins" in config:
         for pin, pin_conf in config["pins"].items():
-            #print pin, direction
             if isinstance(pin_conf, basestring):
                 direction = pin_conf
                 default = 'off'
