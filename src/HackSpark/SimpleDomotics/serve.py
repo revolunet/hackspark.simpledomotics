@@ -24,7 +24,7 @@ def serve_app():
         app.config = yaml.load(fp)
         
     initialize_plugins(app.config)
-        
+
     run(app=AuthMiddleware(app), host=args.host, port=args.port, debug=args.debug, server="paste")
 
 if __name__ == "__main__":

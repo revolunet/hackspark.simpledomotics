@@ -1,11 +1,9 @@
-import threading
 from HackSpark.SimpleDomotics import app
 
 from importlib import import_module
 from threading import Thread
 import time
 import sys
-import compiler
 
 PLUGINS = dict()
 PLUGINS_CONFIGS = dict()
@@ -37,15 +35,17 @@ def prepare_functions(config):
         FUNCTIONS[function_name] = create_macro_launcher(function_name, code)
 
 def create_input_receiver(plugin):
-    if hasattr(plugin, "receive"):
-        while True:
-            try:
-                plugin.receive()
-            except Exception, e:
-                print "GOT AN EXCEPTION RUNNIN RECEIVE FOR %s" % (plugin.__name__)
-                print e
-            time.sleep(.0005)
-    
+    def receive():
+        if hasattr(plugin, "receive"):
+            while True:
+                try:
+                    plugin.receive()
+                except Exception, e:
+                    print "GOT AN EXCEPTION RUNNIN RECEIVE FOR %s" % (plugin.__name__)
+                    print e
+                time.sleep(.0005)
+    return receive
+
 
 def input_round_robin():
     while True:
