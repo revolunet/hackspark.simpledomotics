@@ -38,7 +38,18 @@ def prepare_functions(config):
                        '<macro function "%s">' % function_name, 'exec')
         
         FUNCTIONS[function_name] = create_macro_launcher(function_name, code)
-            
+
+def create_input_receiver(plugin):
+    def receiver():
+        while True:
+            if hasattr(plugin, "receive"):
+                try:
+                    plugin.receive()
+                except Exception, e:
+                    print "GOT AN EXCEPTION RUNNIN RECEIVE FOR %s" % (plugin.__name__)
+                    print e
+            time.sleep(.0005)
+    
 
 def input_round_robin():
     while True:
@@ -107,9 +118,13 @@ def initialize_plugins(config):
                     listeners = [listeners]
                 for listener in listeners:
                     pg_mod.add_listener(event, create_plugin_event_listener(listener, plugin_name))
-    
-    thread = Thread(target = input_round_robin)
-    thread.start()
+
+    for plugin in PLUGINS.values():
+        thread = Thread(target = create_input_receiver(plugin))
+        thread.start()
+
+    #thread = Thread(target = input_round_robin)
+    #thread.start()
     
 def get_plugin(pname):
     return PLUGINS.get(pname)

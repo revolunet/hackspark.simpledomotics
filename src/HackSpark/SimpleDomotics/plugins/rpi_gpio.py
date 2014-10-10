@@ -79,11 +79,19 @@ class GPIO(object):
         
 
 def initialize(config):
-    rGPIO.setmode(rGPIO.BCM)  
+    rGPIO.setmode(rGPIO.BCM)
     if "pins" in config:
         for pin, direction in config["pins"].items():
-            print pin, direction
+            if isinstance(pin_conf, basestring):
+                direction = pin_conf
+                default = 'off'
+            else:
+                direction = pin_conf.get('direction', 'out')
+                default = pin_conf.get('default', 'off')
+
             GPIOS[pin] = GPIO(pin, direction=direction)
+            if default == 'on':
+                GPIOS[pin].on()
 
 def get_value(switch_config):
     return GPIOS[int(switch_config["pin"])].value()
