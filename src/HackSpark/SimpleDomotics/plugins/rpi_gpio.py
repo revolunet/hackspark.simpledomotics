@@ -81,7 +81,7 @@ class GPIO(object):
 def initialize(config):
     rGPIO.setmode(rGPIO.BCM)
     if "pins" in config:
-        for pin, direction in config["pins"].items():
+        for pin, pin_conf in config["pins"].items():
             if isinstance(pin_conf, basestring):
                 direction = pin_conf
                 default = 'off'
